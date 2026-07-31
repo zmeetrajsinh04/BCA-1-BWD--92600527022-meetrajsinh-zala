@@ -1,0 +1,122 @@
+DEFINATION-1 Write html code to insert background to the
+webpage.
+
+CODE-<html>
+    <head>
+        <title>background web page</title>
+    </head>
+    <body bgcolor="gray">
+        <img src="d:\7022.html\Screenshot (1).png" alt="logo" width="300px" height="400px">
+
+    </body>
+</html>
+
+
+DEFINATION-2-Create a web page with appropriate
+content and insert an image towards the left hand
+side of the page when user clicks on the image, it
+should open another web page
+CODE-<html>
+    <head>
+        <title>link image</title>
+        <body>
+            <P>Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugiat pariatur neque similique, vel id adipisci, excepturi explicabo quos modi quisquam corporis! Optio reiciendis tempore excepturi laboriosam nulla praesentium quis quidem.</P>
+            <a href="web page.html">
+                <img src="d:\7022.html\Screenshot (1).png" alt="logo" align="right" width="200px" height="200px">
+            </a>
+
+        </body>
+    </head>
+</html>
+
+
+DEFINATION-3- Create a web page
+showing an ordered list of names of the subjects,
+with nested list if any subject has been selected it
+should display the content of each subject.
+CODE-<html>
+    <head>
+        <title>sub list</title>
+    </head>
+    <body>
+        <ol>
+        <li>
+         <a href="bwd.html"><b>bwd</b></a>
+        </li>
+        <li>
+            <a href="pp1.html"><b>pp1</b></a>
+           </li>
+            <a href="maths.html">maths</a>
+           </li>
+           <li>
+            <a href="aoc.html">aoc</a>
+           </li>
+    </ol>
+    </body>
+</html>
+
+BWD=<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>bwd</title>
+</head>
+<body>
+    <ol>
+     <li>html</li>
+     <li>css</li>
+     <li>java script</li>
+     <li>php</li>
+      
+    </ol>
+    </body>
+</html>
+
+PP1=<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>pp1</title>
+</head>
+<body>
+    <ol>
+    <li>c language</li>
+    <li>opraters</li>
+    <li>coditional statment</li>
+    <li>looping statement</li>
+</ol>
+</body>
+</html>
+
+MATHS=<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>maths</title>
+</head>
+<body>
+    <ol>
+        <li>sets</li>
+        <li>relation</li>
+        <li>algebra</li>
+    </ol>
+</body>
+</html>
+
+AOC=<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>aoc</title>
+</head>
+<body>
+    <ol>
+        <li>binary and decimal</li>
+        <li>logic number</li>
+    </ol>
+</body>
+</html>
