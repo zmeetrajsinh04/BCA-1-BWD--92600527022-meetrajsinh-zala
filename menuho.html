@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Horizontal Navigation Menu</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+        nav {
+            background-color: #333;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .menu-links {
+            list-style-type: none; 
+            margin: 0;
+            padding: 0;
+            display: flex; 
+            justify-content: flex-start; 
+        }
+        .menu-links li {
+            position: relative;
+        }
+        .menu-links a {
+            display: block;
+            color: #ffffff;
+            text-decoration: none; 
+            padding: 15px 20px;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+        .menu-links a:hover {
+            background-color: #007bff; 
+            color: #ffffff;
+        }
+        .menu-links a.active {
+            background-color: #0056b3;
+            font-weight: bold;
+        }
+        .content {
+            padding: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <ul class="menu-links">
+            <li><a href="#home" class="active">Home</a></li>
+            <li><a href="#about">About Us</a></li>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#portfolio">Portfolio</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+    <div class="content">
+        <h1>Welcome to My Website</h1>
+        <p>This is a simple HTML page featuring a responsive horizontal navigation bar.</p>
+    </div>
+
+</body>
+</html>

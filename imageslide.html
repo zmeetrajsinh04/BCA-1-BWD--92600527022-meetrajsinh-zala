@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Slider with Z-Index</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #181818;
+        }
+
+       
+        .slider-container {
+            position: relative;
+            width: 800px;
+            height: 450px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+        }
+
+        .slide {
+            position: absolute; 
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.6s ease-in-out;
+            z-index: 1; 
+        }
+        .slide.active {
+            opacity: 1;
+            z-index: 2; 
+        }
+
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .slide-text {
+            position: absolute;
+            bottom: 40px;
+            left: 40px;
+            color: #ffffff;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 15px 25px;
+            border-radius: 8px;
+            max-width: 80%;
+            z-index: 3; 
+        }
+        .slide-text h2 {
+            margin-bottom: 5px;
+            font-size: 24px;
+        }
+
+        .slide-text p {
+            font-size: 14px;
+            color: #ddd;
+        }
+        .btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(255, 255, 255, 0.7);
+            border: none;
+            color: #333;
+            font-size: 24px;
+            font-weight: bold;
+            padding: 12px 18px;
+            cursor: pointer;
+            border-radius: 50%;
+            transition: background-color 0.3s;
+            z-index: 10; 
+        }
+
+        .btn:hover {
+            background-color: rgba(255, 255, 255, 1);
+        }
+
+        .prev-btn {
+            left: 20px;
+        }
+
+        .next-btn {
+            right: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="slider-container">
+        <button class="btn prev-btn" onclick="prevSlide()">&#10094;</button>
+        <button class="btn next-btn" onclick="nextSlide()">&#10095;</button>
+        <div class="slide active">
+            <img src="d:\7022.html\images.jpg" alt="car">
+            <div class="slide-text">
+                <h2>Serene Mountains</h2>
+                <p>Explore the vast beauty of tranquil alpine ranges.</p>
+            </div>
+        </div>
+        <div class="slide">
+            <img src="d:\7022.html\images 1.jpg" alt="car">
+            <div class="slide-text">
+                <h2>River Valleys</h2>
+                <p>Flow through the lush greenery and peaceful waters.</p>
+            </div>
+        </div>
+        <div class="slide">
+            <img src="d:\7022.html\images2.jpg" alt="logo">
+            <div class="slide-text">
+                <h2>Deep Forests</h2>
+                <p>Discover pathways through ancient trees and misty air.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        let currentSlide = 0;
+
+        function showSlide(index) {
+            slides.forEach(slide => slide.classList.remove('active'));
+            if (index >= slides.length) {
+                currentSlide = 0;
+            } else if (index < 0) {
+                currentSlide = slides.length - 1;
+            } else {
+                currentSlide = index;
+            }
+            slides[currentSlide].classList.add('active');
+        }
+
+        function nextSlide() {
+            showSlide(currentSlide + 1);
+        }
+
+        function prevSlide() {
+            showSlide(currentSlide - 1);
+        }
+    </script>
+
+</body>
+</html>
