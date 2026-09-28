@@ -3,14 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>login</title>
+    <link rel="stylesheet" href="login.css">
+    <title>Document</title>
 </head>
 <body>
-    <center>   <P><b><h1>login</h1></b></P></center>
-    <center>
-    E-mail : <input type="TEXT" name="TEXT" /> <br><br>
-    PASSWORD : <input type="PASSWORD" name="PASSWORD" /> <br><br>
-    <a href="registration.html">registration</a>
-    </center>
+    <div class="login">
+        <h1>login</h1>
+        <form>
+            <label for="username">username:</label>
+            <input type="text" id="username" name="username" required>
+            <br><br>
+            <label for="password">password:</label>
+            <input type="password" id="password" name="password" required>
+            <br><br>
+            <button type="submit">login</button>
+        </form>
+    </div>
 </body>
 </html>
