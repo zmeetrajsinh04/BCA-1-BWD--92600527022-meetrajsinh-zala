@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CineView -- Reviews Worth the Ticket Price</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Lora:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+
+  :root{
+    --bg: #130a0f;
+    --bg-deep: #0c0609;
+    --card: #1f131a;
+    --card-hi: #2a1a22;
+    --gold: #e3b64f;
+    --gold-dim: #a5813a;
+    --velvet: #8c1f42;
+    --velvet-hi: #b02a54;
+    --cream: #f3e7d2;
+    --muted: #a58e82;
+    --line: rgba(227,182,79,0.18);
+
+    --display: 'Bebas Neue', sans-serif;
+    --serif: 'Playfair Display', serif;
+    --body: 'Lora', serif;
+    --mono: 'JetBrains Mono', monospace;
+  }
+
+  *{ margin:0; padding:0; box-sizing:border-box; }
+
+  html{ scroll-behavior:smooth; }
+
+  body{
+    background: radial-gradient(ellipse at 50% -10%, #24121a 0%, var(--bg) 45%, var(--bg-deep) 100%);
+    color: var(--cream);
+    font-family: var(--body);
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior:auto !important; }
+  }
+
+  a{ color: inherit; }
+  :focus-visible{ outline: 2px solid var(--gold); outline-offset: 3px; }
+
+  /* ---------- CURTAIN INTRO ---------- */
+  .curtain{
+    position: fixed; inset:0; z-index: 999;
+    display:flex; pointer-events:none;
+  }
+  .curtain .panel{
+    flex:1; height:100%;
+    background:
+      repeating-linear-gradient(90deg, #6e162f 0 14px, #7d1c37 14px 28px),
+      linear-gradient(180deg, #8c1f42, #4a0f22);
+    box-shadow: inset -20px 0 40px rgba(0,0,0,0.5);
+    animation: openCurtain 1.6s cubic-bezier(.77,0,.18,1) 0.3s forwards;
+  }
+  .curtain .panel.right{ animation-name: openCurtainR; box-shadow: inset 20px 0 40px rgba(0,0,0,0.5); }
+  @keyframes openCurtain{ to{ transform: translateX(-105%); } }
+  @keyframes openCurtainR{ to{ transform: translateX(105%); } }
+
+  /* ---------- NAV ---------- */
+  header{
+    position: fixed; top:0; left:0; right:0; z-index: 200;
+    display:flex; align-items:center; justify-content:space-between;
+    padding: 22px clamp(20px,5vw,64px);
+    background: linear-gradient(180deg, rgba(12,6,9,0.9), transparent);
+    backdrop-filter: blur(2px);
+  }
+  .brand{
+    font-family: var(--display);
+    font-size: 1.6rem;
+    letter-spacing: 0.12em;
+    color: var(--gold);
+    text-shadow: 0 0 12px rgba(227,182,79,0.5);
+  }
+  nav ul{ list-style:none; display:flex; gap: clamp(16px,3vw,36px); }
+  nav a{
+    text-decoration:none; font-family: var(--mono); font-size: 0.72rem;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted);
+    transition: color 0.25s ease;
+  }
+  nav a:hover{ color: var(--gold); }
+
+  /* ---------- HERO / MARQUEE ---------- */
+  .hero{
+    min-height: 100svh;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; position:relative;
+    padding: 140px 20px 80px;
+    perspective: 1400px;
+  }
+
+  .marquee-frame{
+    border: 3px solid var(--gold-dim);
+    border-radius: 6px;
+    padding: 10px clamp(16px,4vw,40px);
+    position: relative;
+    box-shadow: 0 0 0 6px var(--bg-deep), 0 0 40px rgba(227,182,79,0.15);
+  }
+  .bulbs{ position:absolute; inset: -3px; border-radius: 6px; pointer-events:none; }
+  .bulb{
+    position:absolute; width:7px; height:7px; border-radius:50%;
+    background: var(--gold);
+    box-shadow: 0 0 6px 2px rgba(227,182,79,0.8);
+    animation: blink 1.8s ease-in-out infinite;
+  }
+  @keyframes blink{ 0%,100%{ opacity:1; } 50%{ opacity:0.25; } }
+
+  .hero h1{
+    font-family: var(--display);
+    font-size: clamp(3.5rem, 11vw, 8rem);
+    letter-spacing: 0.05em;
+    line-height: 0.9;
+    color: var(--cream);
+    text-shadow: 0 0 30px rgba(227,182,79,0.25);
+  }
+  .hero h1 span{ color: var(--gold); }
+
+  .hero .tagline{
+    margin-top: 18px;
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: clamp(1rem, 2vw, 1.35rem);
+    color: var(--muted);
+    max-width: 46ch;
+  }
+
+  .hero .eyebrow{
+    font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.3em;
+    text-transform: uppercase; color: var(--velvet-hi); margin-bottom: 14px;
+  }
+
+  /* floating 3D poster stack */
+  .poster-stack{
+    margin-top: 64px;
+    width: min(560px, 80vw);
+    height: 300px;
+    position: relative;
+    transform-style: preserve-3d;
+  }
+  .stack-card{
+    position:absolute; inset:0; margin:auto;
+    width: 190px; height: 270px;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+    display:flex; align-items:flex-end; padding: 14px;
+    font-family: var(--serif); font-weight:700; font-size: 1.1rem;
+    color: var(--cream);
+    animation: floaty 6s ease-in-out infinite;
+  }
+  .stack-card b{ text-shadow: 0 2px 8px rgba(0,0,0,0.8); }
+  .stack-card.c1{ background: linear-gradient(160deg, #2a3f5f, #0d1420); transform: translateX(-130px) rotateY(18deg) translateZ(-40px) rotate(-6deg); animation-delay: 0s; }
+  .stack-card.c2{ background: linear-gradient(160deg, #5f2a3f, #200d16); transform: translateX(0) rotateY(0deg) translateZ(40px); z-index:2; animation-delay: 0.4s; }
+  .stack-card.c3{ background: linear-gradient(160deg, #3f5f2a, #14200d); transform: translateX(130px) rotateY(-18deg) translateZ(-40px) rotate(6deg); animation-delay: 0.8s; }
+  @keyframes floaty{ 0%,100%{ translate: 0 0; } 50%{ translate: 0 -14px; } }
+
+  .scroll-cue{
+    margin-top: 56px; font-family: var(--mono); font-size: 0.68rem;
+    letter-spacing: 0.2em; color: var(--muted); text-transform: uppercase;
+    display:flex; flex-direction:column; align-items:center; gap:8px;
+  }
+  .scroll-cue .line{ width:1px; height: 34px; background: linear-gradient(var(--gold), transparent); animation: pulse 1.8s ease-in-out infinite; }
+  @keyframes pulse{ 0%,100%{ opacity:0.3; } 50%{ opacity:1; } }
+
+  /* ---------- FILM STRIP DIVIDER ---------- */
+  .filmstrip{
+    height: 34px;
+    background: #0c0609;
+    display:flex; align-items:center;
+    background-image:
+      radial-gradient(circle, #1f131a 5px, transparent 5.5px);
+    background-size: 26px 34px;
+    background-position: 13px center;
+    border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+  }
+
+  /* ---------- SECTION SHELL ---------- */
+  section{ padding: 110px clamp(20px,6vw,80px); position: relative; }
+  .section-head{ max-width: 720px; margin: 0 auto 56px; text-align:center; }
+  .section-head .eyebrow{
+    font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.3em;
+    text-transform: uppercase; color: var(--velvet-hi); margin-bottom: 12px;
+  }
+  .section-head h2{
+    font-family: var(--display); font-size: clamp(2.4rem, 5vw, 3.6rem);
+    letter-spacing: 0.03em; color: var(--gold);
+  }
+  .section-head p{ margin-top: 14px; color: var(--muted); font-family: var(--serif); font-style: italic; }
+
+  .reveal{ opacity:0; transform: translateY(36px); transition: opacity 0.8s ease, transform 0.8s ease; }
+  .reveal.in{ opacity:1; transform: translateY(0); }
+
+  /* ---------- FEATURED REVIEW (big 3D tilt) ---------- */
+  .featured{
+    max-width: 1080px; margin: 0 auto;
+    display:grid; grid-template-columns: 320px 1fr; gap: 56px;
+    align-items:center;
+  }
+  @media (max-width: 800px){ .featured{ grid-template-columns: 1fr; } }
+
+  .tilt-wrap{ perspective: 1000px; }
+  .tilt-poster{
+    width: 100%; aspect-ratio: 2/3; border-radius: 10px;
+    background: linear-gradient(150deg, #3a2540 0%, #170d1c 60%, #0c0609 100%);
+    border: 1px solid var(--line);
+    box-shadow: 0 40px 70px -20px rgba(0,0,0,0.7);
+    transform-style: preserve-3d;
+    transition: transform 0.12s ease-out;
+    display:flex; flex-direction:column; justify-content:space-between;
+    padding: 26px;
+    position: relative;
+    overflow:hidden;
+  }
+  .tilt-poster::after{
+    content:""; position:absolute; inset:0;
+    background: linear-gradient(120deg, rgba(227,182,79,0.16), transparent 40%);
+    mix-blend-mode: screen;
+  }
+  .tilt-poster .cert{
+    font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.18em;
+    color: var(--gold); border: 1px solid var(--gold-dim); border-radius: 20px;
+    padding: 4px 10px; width: fit-content; text-transform: uppercase;
+  }
+  .tilt-poster .p-title{ font-family: var(--serif); font-weight:700; font-size: 1.9rem; line-height:1.05; color: var(--cream); }
+  .tilt-poster .p-sub{ font-family: var(--mono); font-size: 0.7rem; color: var(--muted); letter-spacing: 0.08em; margin-top:6px; }
+
+  .featured-copy .eyebrow{ font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.3em; color: var(--velvet-hi); text-transform: uppercase; }
+  .featured-copy h3{ font-family: var(--display); font-size: clamp(2rem,4vw,3rem); letter-spacing: 0.02em; color: var(--cream); margin: 10px 0 18px; }
+  .featured-copy p{ color: var(--muted); line-height: 1.75; font-size: 1.02rem; }
+  .featured-copy p + p{ margin-top: 14px; }
+  .stars{ margin: 22px 0 4px; display:flex; gap:6px; font-size:1.3rem; color: var(--gold); }
+  .stars .half{ opacity:0.4; }
+  .score-line{ font-family: var(--mono); font-size:0.75rem; color: var(--muted); letter-spacing:0.08em; }
+
+  /* ---------- REVIEW GRID (3D flip cards) ---------- */
+  .grid{
+    max-width: 1200px; margin: 0 auto;
+    display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 30px;
+  }
+  .flip-card{ perspective: 1200px; height: 380px; }
+  .flip-inner{
+    position:relative; width:100%; height:100%;
+    transform-style: preserve-3d;
+    transition: transform 0.7s cubic-bezier(.4,.2,.2,1);
+  }
+  .flip-card:hover .flip-inner, .flip-card:focus-within .flip-inner{ transform: rotateY(180deg); }
+  .face{
+    position:absolute; inset:0; backface-visibility:hidden;
+    border-radius: 10px; border: 1px solid var(--line);
+    padding: 22px; display:flex; flex-direction:column;
+  }
+  .face.front{
+    background: var(--card);
+    justify-content:flex-end;
+  }
+  .face.front .glow{
+    position:absolute; inset:0; border-radius:10px;
+    background: var(--poster-grad, linear-gradient(160deg,#2a3f5f,#0d1420));
+    opacity: 0.9; z-index:-1;
+  }
+  .genre-tag{
+    font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--gold); border:1px solid var(--gold-dim);
+    border-radius: 20px; padding: 3px 10px; width:fit-content; margin-bottom: auto;
+  }
+  .face.front h4{ font-family: var(--serif); font-weight:700; font-size: 1.4rem; color: var(--cream); text-shadow: 0 2px 10px rgba(0,0,0,0.8); }
+  .face.front .yr{ font-family: var(--mono); font-size: 0.72rem; color: var(--muted); margin-top:4px; }
+  .face.front .flip-hint{ margin-top: 14px; font-family: var(--mono); font-size: 0.62rem; color: var(--muted); letter-spacing:0.1em; text-transform:uppercase; }
+
+  .face.back{
+    background: var(--card-hi);
+    transform: rotateY(180deg);
+    justify-content:space-between;
+  }
+  .face.back .rating{ font-family: var(--display); font-size: 2.6rem; color: var(--gold); letter-spacing:0.03em; }
+  .face.back .rating small{ font-family: var(--mono); font-size: 0.9rem; color: var(--muted); }
+  .face.back p{ font-family: var(--body); font-size: 0.9rem; color: var(--muted); line-height: 1.6; }
+  .face.back .critic{ font-family: var(--mono); font-size: 0.65rem; color: var(--gold-dim); letter-spacing:0.08em; text-transform:uppercase; }
+
+  /* ---------- RATING SCALE ---------- */
+  .scale-wrap{ max-width: 900px; margin:0 auto; }
+  .scale{ display:flex; flex-direction:column; gap: 22px; }
+  .scale-row{
+    display:grid; grid-template-columns: 90px 1fr 60px; align-items:center; gap: 20px;
+  }
+  .scale-row .lbl{ font-family: var(--serif); font-style:italic; color: var(--cream); }
+  .track{ height: 8px; border-radius: 6px; background: rgba(255,255,255,0.06); overflow:hidden; }
+  .fill{
+    height:100%; border-radius:6px;
+    background: linear-gradient(90deg, var(--velvet), var(--gold));
+    width: 0%;
+    transition: width 1.2s cubic-bezier(.2,.7,.2,1);
+  }
+  .scale-row .val{ font-family: var(--mono); color: var(--gold); text-align:right; }
+
+  /* ---------- FOOTER ---------- */
+  footer{
+    padding: 70px clamp(20px,6vw,80px) 50px;
+    text-align:center; border-top: 1px solid var(--line);
+  }
+  footer .brand{ display:block; margin-bottom: 10px; }
+  footer p{ font-family: var(--mono); font-size: 0.72rem; color: var(--muted); letter-spacing: 0.08em; }
+</style>
+</head>
+<body>
+
+  <div class="curtain" aria-hidden="true">
+    <div class="panel left"></div>
+    <div class="panel right"></div>
+  </div>
+
+  <header>
+    <div class="brand">CINE<span style="color:var(--cream)">VIEW</span></div>
+    <nav>
+      <ul>
+        <li><a href="#featured">Feature</a></li>
+        <li><a href="#reviews">Reviews</a></li>
+        <li><a href="#scale">Ratings</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div class="eyebrow">Est. tonight · Showing everywhere</div>
+    <div class="marquee-frame">
+      <div class="bulbs" id="bulbs"></div>
+      <h1>CINE<span>VIEW</span></h1>
+    </div>
+    <p class="tagline">Honest reviews, no spoilers past the trailer, and a rating scale that actually means something.</p>
+
+    <div class="poster-stack">
+      <div class="stack-card c1"><b>DUNE</b></div>
+      <div class="stack-card c2"><b>OPPENHEIMER</b></div>
+      <div class="stack-card c3"><b>PARASITE</b></div>
+    </div>
+
+    <div class="scroll-cue"><span>Scroll for the feature</span><span class="line"></span></div>
+  </section>
+
+  <div class="filmstrip"></div>
+
+  <section id="featured">
+    <div class="section-head reveal">
+      <div class="eyebrow">Tonight's Feature</div>
+      <h2>The Review</h2>
+      <p>What we watched, and why it's worth your evening.</p>
+    </div>
+
+    <div class="featured reveal">
+      <div class="tilt-wrap">
+        <div class="tilt-poster" id="tiltPoster">
+          <span class="cert">CV · Editor's Pick</span>
+          <div>
+            <div class="p-title">Dune: Part Two</div>
+            <div class="p-sub">DIR. DENIS VILLENEUVE -- SCI-FI / EPIC</div>
+          </div>
+        </div>
+      </div>
+      <div class="featured-copy">
+        <div class="eyebrow">Sci-Fi Epic</div>
+        <h3>A sequel that out-scales its own ambition</h3>
+        <p>Villeneuve trades the first film's restraint for spectacle, and the gamble pays off. The Fremen sequences on the open sand feel genuinely vast, shot with a patience that modern blockbusters rarely allow themselves.</p>
+        <p>Where it truly lands is Chani's arc -- the film's emotional spine -- giving the back half a weight the trailers never hinted at. It's dense, occasionally punishing, and one of the few franchise sequels that earns its runtime.</p>
+        <div class="stars" aria-label="4.5 out of 5 stars">★★★★<span class="half">★</span></div>
+        <div class="score-line">4.5 / 5 · CineView Staff Review</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="filmstrip"></div>
+
+  <section id="reviews">
+    <div class="section-head reveal">
+      <div class="eyebrow">The Archive</div>
+      <h2>Recent Reviews</h2>
+      <p>Hover -- or tab to -- a card to flip it and see the verdict.</p>
+    </div>
+
+    <div class="grid reveal" id="grid"></div>
+  </section>
+
+  <div class="filmstrip"></div>
+
+  <section id="scale">
+    <div class="section-head reveal">
+      <div class="eyebrow">How We Score</div>
+      <h2>The Rating Scale</h2>
+      <p>Five categories, weighted equally, no half-hearted 7/10s.</p>
+    </div>
+    <div class="scale-wrap reveal" id="scaleWrap">
+      <div class="scale">
+        <div class="scale-row"><div class="lbl">Story</div><div class="track"><div class="fill" data-w="88"></div></div><div class="val">8.8</div></div>
+        <div class="scale-row"><div class="lbl">Craft</div><div class="track"><div class="fill" data-w="94"></div></div><div class="val">9.4</div></div>
+        <div class="scale-row"><div class="lbl">Performance</div><div class="track"><div class="fill" data-w="90"></div></div><div class="val">9.0</div></div>
+        <div class="scale-row"><div class="lbl">Pacing</div><div class="track"><div class="fill" data-w="76"></div></div><div class="val">7.6</div></div>
+        <div class="scale-row"><div class="lbl">Rewatch</div><div class="track"><div class="fill" data-w="82"></div></div><div class="val">8.2</div></div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span class="brand">CINE<span style="color:var(--cream)">VIEW</span></span>
+    <p>© 2026 CineView -- Reviews written by people who still buy a ticket for the trailers.</p>
+  </footer>
+
+<script>
+  // ---- marquee bulbs ----
+  const bulbs = document.getElementById('bulbs');
+  const bulbCount = 40;
+  for(let i=0;i<bulbCount;i++){
+    const b = document.createElement('div');
+    b.className = 'bulb';
+    const t = i/bulbCount;
+    const perimeter = 2*(1)+2*(1);
+    let x,y;
+    if(t < 0.4){ x = t/0.4; y = 0; }
+    else if(t < 0.5){ x = 1; y = (t-0.4)/0.1; }
+    else if(t < 0.9){ x = 1-(t-0.5)/0.4; y = 1; }
+    else { x = 0; y = 1-(t-0.9)/0.1; }
+    b.style.left = (x*100)+'%';
+    b.style.top = (y*100)+'%';
+    b.style.animationDelay = (i*0.07)+'s';
+    bulbs.appendChild(b);
+  }
+
+  // ---- 3D tilt on featured poster ----
+  const tilt = document.getElementById('tiltPoster');
+  tilt.addEventListener('mousemove', (e)=>{
+    const r = tilt.getBoundingClientRect();
+    const x = (e.clientX - r.left)/r.width - 0.5;
+    const y = (e.clientY - r.top)/r.height - 0.5;
+    tilt.style.transform = `rotateY(${x*18}deg) rotateX(${-y*18}deg) translateZ(10px)`;
+  });
+  tilt.addEventListener('mouseleave', ()=>{ tilt.style.transform = 'rotateY(0) rotateX(0)'; });
+
+  // ---- review data & grid render ----
+  const reviews = [
+    { title:"Oppenheimer", year:"2023 · Drama / Biopic", genre:"Biopic", grad:"linear-gradient(160deg,#5f4a2a,#1a1408)", rating:"9.1", critic:"CineView Staff", blurb:"Nolan turns a physics lecture into a thriller. The trinity test sequence alone justifies the theater seat." },
+    { title:"Parasite", year:"2019 · Thriller / Satire", genre:"Thriller", grad:"linear-gradient(160deg,#2a5f3f,#081a12)", rating:"9.6", critic:"CineView Staff", blurb:"A class satire that tightens like a snare with every scene. Nothing about the ending feels inevitable until it happens." },
+    { title:"Blade Runner 2049", year:"2017 · Sci-Fi / Neo-Noir", genre:"Sci-Fi", grad:"linear-gradient(160deg,#2a4a5f,#08141a)", rating:"8.9", critic:"CineView Staff", blurb:"Slower than the original demands patience it rewards. Deakins shoots silence like it's the main character." },
+    { title:"The Grand Budapest Hotel", year:"2014 · Comedy / Caper", genre:"Comedy", grad:"linear-gradient(160deg,#8c1f42,#2a0a17)", rating:"8.7", critic:"CineView Staff", blurb:"Anderson's most controlled film -- every frame is a diorama, and the caper plot never stops moving." },
+    { title:"Interstellar", year:"2014 · Sci-Fi / Drama", genre:"Sci-Fi", grad:"linear-gradient(160deg,#3f2a5f,#12081a)", rating:"8.4", critic:"CineView Staff", blurb:"Overreaches in the third act, but the docking sequence and the cornfield goodbye still land every time." },
+    { title:"Everything Everywhere", year:"2022 · Sci-Fi / Comedy", genre:"Sci-Fi Comedy", grad:"linear-gradient(160deg,#5f2a4a,#1a0812)", rating:"9.3", critic:"CineView Staff", blurb:"Chaotic on purpose, and somehow the most sincere film about family on this list." },
+  ];
+
+  const grid = document.getElementById('grid');
+  reviews.forEach(r=>{
+    const card = document.createElement('div');
+    card.className = 'flip-card';
+    card.tabIndex = 0;
+    card.innerHTML = `
+      <div class="flip-inner">
+        <div class="face front">
+          <div class="glow" style="--poster-grad:${r.grad}"></div>
+          <span class="genre-tag">${r.genre}</span>
+          <h4>${r.title}</h4>
+          <div class="yr">${r.year}</div>
+          <div class="flip-hint">Hover to flip →</div>
+        </div>
+        <div class="face back">
+          <div>
+            <div class="critic">Verdict</div>
+            <div class="rating">${r.rating} <small>/ 10</small></div>
+          </div>
+          <p>${r.blurb}</p>
+          <div class="critic">${r.critic}</div>
+        </div>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+
+  // ---- scroll reveal ----
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(en=>{
+      if(en.isIntersecting){ en.target.classList.add('in'); }
+    });
+  }, { threshold: 0.15 });
+  revealEls.forEach(el=>io.observe(el));
+
+  // ---- rating scale bar fill on view ----
+  const scaleWrap = document.getElementById('scaleWrap');
+  const fills = scaleWrap.querySelectorAll('.fill');
+  const io2 = new IntersectionObserver((entries)=>{
+    entries.forEach(en=>{
+      if(en.isIntersecting){
+        fills.forEach(f=> f.style.width = f.dataset.w+'%');
+        io2.disconnect();
+      }
+    });
+  }, { threshold: 0.3 });
+  io2.observe(scaleWrap);
+
+  // ---- remove curtain from flow after animation ----
+  setTimeout(()=>{ document.querySelector('.curtain').style.display='none'; }, 2200);
+</script>
+</body>
+</html>
