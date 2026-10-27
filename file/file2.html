@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Month Name Finder</title>
+    <title>Month Name Finder</title>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Month Finder</h2>
+        <p>Enter a month number (1 to 12):</p>
+        <input type="number" id="monthInput" placeholder="e.g. 5" min="1" max="12">
+        <br>
+        <button onclick="getMonthName()">Get Month Name</button>
+        <div class="result" id="resultDisplay"></div>
+    </div>
+
+    <script>
+        function getMonthName() {
+
+            let monthNumber = parseInt(document.getElementById("monthInput").value);
+            let monthName;
+            switch (monthNumber) {
+                case 1:
+                    monthName = "January";
+                    break;
+                case 2:
+                    monthName = "February";
+                    break;
+                case 3:
+                    monthName = "March";
+                    break;
+                case 4:
+                    monthName = "April";
+                    break;
+                case 5:
+                    monthName = "May";
+                    break;
+                case 6:
+                    monthName = "June";
+                    break;
+                case 7:
+                    monthName = "July";
+                    break;
+                case 8:
+                    monthName = "August";
+                    break;
+                case 9:
+                    monthName = "September";
+                    break;
+                case 10:
+                    monthName = "October";
+                    break;
+                case 11:
+                    monthName = "November";
+                    break;
+                case 12:
+                    monthName = "December";
+                    break;
+                default:
+                    monthName = "Invalid input! Please enter a number between 1 and 12.";
+            }
+            document.getElementById("resultDisplay").textContent = monthName;
+            console.log("Month selected: " + monthName);
+        }
+    </script>
+</body>
+</html>

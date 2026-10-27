@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Number Properties Checker</title>
+</head>
+<body>
+
+    <div class="card">
+        <h2>Number Analysis Tool</h2>
+        <p>Enter an integer to check its properties:</p>
+        <input type="number" id="numInput" placeholder="Enter a number (e.g. 17)">
+        <br>
+        <button onclick="analyzeNumber()">Check Number</button>
+        
+        <div class="results" id="outputBox" style="display: none;"></div>
+    </div>
+
+    <script>
+        function analyzeNumber() {
+            const inputVal = document.getElementById("numInput").value;
+            const outputBox = document.getElementById("outputBox");
+            if (inputVal === "") {
+                outputBox.style.display = "block";
+                outputBox.innerHTML = "<p class='error'>Please enter a valid number!</p>";
+                return;
+            }
+            const num = parseInt(inputVal);
+            let signResult = "";
+            if (num > 0) {
+                signResult = "Positive";
+            } else if (num < 0) {
+                signResult = "Negative";
+            } else {
+                signResult = "Zero";
+            }q
+            let evenOddResult = "";
+            if (num % 2 === 0) {
+                evenOddResult = "Even";
+            } else {
+                evenOddResult = "Odd";
+            }
+
+            let isPrime = true;
+            let primeResult = "";
+
+            if (num <= 1) {
+                isPrime = false; 
+            } else {
+                let i = 2;
+                while (i <= Math.sqrt(num)) {
+                    if (num % i === 0) {
+                        isPrime = false;
+                        break;
+                    }
+                    i++;
+                }
+            }
+
+            if (isPrime) {
+                primeResult = "Prime Number";
+            } else {
+                primeResult = "Not a Prime Number";
+            }
+            let isPerfectSquare = false;
+            if (num >= 0 && Math.sqrt(num) % 1 === 0) {
+                isPerfectSquare = true;
+            }
+            outputBox.style.display = "block";
+            outputBox.innerHTML = `
+                <p><strong>Number:</strong> ${num}</p>
+                <p><strong>Even/Odd:</strong> ${evenOddResult}</p>
+                <p><strong>Prime Status:</strong> ${primeResult}</p>
+            `;
+            console.log(`--- Analysis for ${num} ---`);
+            console.log(`Even/Odd: ${evenOddResult}`);
+            console.log(`Prime: ${primeResult}`);
+        }
+    </script>
+
+</body>
+</html>

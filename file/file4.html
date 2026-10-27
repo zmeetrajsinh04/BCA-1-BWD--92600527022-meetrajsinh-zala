@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Armstrong Number Checker</title>
+</head>
+<body>
+
+<div class="container">
+    <h2>Armstrong Checker</h2>
+    <input type="number" id="numInput" placeholder="Enter a number" min="0">
+    <button onclick="checkArmstrong()">Check Number</button>
+    <div id="result"></div>
+</div>
+
+<script>
+    function checkArmstrong() {
+        const inputVal = document.getElementById('numInput').value.trim();
+        const resultDiv = document.getElementById('result');
+        if (inputVal === '' || isNaN(inputVal) || Number(inputVal) < 0) {
+            resultDiv.style.color = 'red';
+            resultDiv.innerText = 'Please enter a valid positive integer.';
+            return;
+        }
+        const num = parseInt(inputVal, 10);
+        const strNum = String(num);
+        const power = strNum.length;
+        let sum = 0;
+        for (let char of strNum) {
+            sum += Math.pow(parseInt(char, 10), power);
+        }
+        if (sum === num) {
+            resultDiv.style.color = 'green';
+            resultDiv.innerText = `${num} is an Armstrong number!`;
+        } else {
+            resultDiv.style.color = 'red';
+            resultDiv.innerText = `${num} is NOT an Armstrong number.`;
+        }
+    }
+</script>s
+</body>
+</html>
